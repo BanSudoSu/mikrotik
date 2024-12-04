@@ -8,7 +8,7 @@ spawn telnet 192.168.234.132 30016
 set timeout 10
 
 # Login
-expect "MikroTik Login: Login: " { send "admin\r" }
+expect "Mikrotik Login: " { send "admin\r" }
 expect "Password: " { send "\r" }
 
 # Jika ada prompt untuk lisensi, jawab "n"
@@ -17,7 +17,7 @@ expect {
     "new password>" { send "123\r" }
 }
 
-# Mengubah password baru
+# Ubah password dengan waktu tunggu tambahan
 expect "new password>" { 
     sleep 1
     send "123\r"
@@ -25,6 +25,17 @@ expect "new password>" {
 expect "repeat new password>" { 
     sleep 1
     send "123\r"
+}
+
+# Verifikasi keberhasilan
+expect {
+    "Try again, error: New passwords do not match!" {
+        puts "Error: Password tidak cocok. Harap periksa kembali input password."
+        exit 1
+    }
+    ">" {
+        puts "Password berhasil diubah."
+    }
 }
 
 # Menambahkan IP Address
