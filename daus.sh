@@ -8,7 +8,7 @@ spawn telnet 192.168.234.132 30016
 set timeout 10
 
 # Login
-expect "Mikrotik Login: " { send "admin\r" }
+expect "MikroTik Login: Login: " { send "admin\r" }
 expect "Password: " { send "\r" }
 
 # Jika ada prompt untuk lisensi, jawab "n"
