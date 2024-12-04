@@ -1,40 +1,33 @@
 #!/usr/bin/expect
 
-# Aktifkan log untuk debugging
-log_file -a debug_output.log
-
-# Mulai sesi telnet
+# Mulai sesi telnet ke MikroTik
 spawn telnet 192.168.234.132 30016
 set timeout 10
 
-# Login
+# Login otomatis
 expect "Mikrotik Login: " { send "admin\r" }
 expect "Password: " { send "\r" }
 
-# Jika ada prompt untuk lisensi, jawab "n"
+# Tangani prompt lisensi jika muncul
 expect {
     -re "Do you want to see the software license.*" { send "n\r" }
     "new password>" { send "123\r" }
 }
 
-# Ubah password dengan waktu tunggu tambahan
+# Ubah password baru jika diminta
 expect "new password>" { 
-    sleep 1
     send "123\r"
-}         
-expect "repeat new password>" { 
-    sleep 1
-    send "123\r"
+    expect "repeat new password>" { send "123\r" }
 }
 
-# Verifikasi keberhasilan
+# Verifikasi apakah password berhasil diubah
 expect {
     "Try again, error: New passwords do not match!" {
-        puts "Error: Password tidak cocok. Harap periksa kembali input password."
+        puts "Error: Password tidak cocok. Gagal login."
         exit 1
     }
     ">" {
-        puts "Password berhasil diubah."
+        puts "Login berhasil dan konfigurasi dimulai."
     }
 }
 
@@ -45,7 +38,10 @@ expect ">" { send "/ip address add address=192.168.200.1/24 interface=ether2\r" 
 expect ">" { send "/ip firewall nat add chain=srcnat out-interface=ether2 action=masquerade\r" }
 
 # Menambahkan Route
-expect ">" { send "/ip route add dst-address=192.168.200.1/24 gateway=192.168.20.1\r" }
+expect ">" { send "/ip route add dst-address=192.168.200.0/24 gateway=192.168.20.1\r" }
+
+# Menambahkan Firewall Rule (contoh tambahan)
+expect ">" { send "/ip firewall filter add chain=input action=accept protocol=tcp dst-port=22\r" }
 
 # Keluar dari MikroTik
 expect ">" { send "quit\r" }
