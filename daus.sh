@@ -1,5 +1,9 @@
 #!/usr/bin/expect
 
+# Aktifkan log untuk debugging
+log_file -a debug_output.log
+
+# Mulai sesi telnet
 spawn telnet 192.168.234.132 30016
 set timeout 10
 
@@ -9,7 +13,7 @@ expect "Password: " { send "\r" }
 
 # Jika ada prompt untuk lisensi, jawab "n"
 expect {
-    "Do you want to see the software license? [Y/n]:" { send "n\r" }
+    -re "Do you want to see the software license.*" { send "n\r" }
     "new password>" { send "123\r" }
 }
 
