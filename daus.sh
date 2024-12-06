@@ -44,5 +44,4 @@ expect ">" { send "/ip route add dst-address=192.168.200.0/24 gateway=192.168.20
 expect ">" { send "/ip firewall filter add chain=input action=accept protocol=tcp dst-port=22\r" }
 
 # Keluar dari MikroTik
-expect ">" { send "quit\r" }
 expect eof
