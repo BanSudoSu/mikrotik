@@ -35,7 +35,7 @@ expect {
 expect ">" { send "/ip address add address=192.168.200.1/24 interface=ether2\r" }
 
 # Menambahkan NAT Masquerade
-expect ">" { send "/ip firewall nat add chain=srcnat out-interface=ether2 action=masquerade\r" }
+expect ">" { send "/ip firewall nat add chain=srcnat out-interface=ether1 action=masquerade\r" }
 
 # Menambahkan Route
 expect ">" { send "/ip route add dst-address=192.168.200.0/24 gateway=192.168.20.1\r" }
