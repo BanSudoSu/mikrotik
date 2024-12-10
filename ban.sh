@@ -123,6 +123,10 @@ fi
 CISCO_IP="192.168.234.132"
 CISCO_PORT="30013"
 
+# Fungsi untuk pesan sukses dan gagal
+success_message() { echo -e "${GREEN}$1 berhasil!${NC}"; }
+error_message() { echo -e "${RED}$1 gagal!${NC}"; exit 1; }
+
 # Telnet dan konfigurasi perangkat Cisco
 expect <<EOF
 spawn telnet $CISCO_IP $CISCO_PORT
@@ -151,6 +155,9 @@ expect "(config)#" { send "exit\r" }
 expect "#" { send "exit\r" }
 expect eof
 EOF
+
+# Cek status dan tampilkan pesan
+[ $? -eq 0 ] && success_message "Konfigurasi Cisco" || error_message "Proses konfigurasi Cisco"
 
 
 # Konfigurasi MikroTik
