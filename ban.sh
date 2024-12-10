@@ -125,15 +125,16 @@ CISCO_IP="192.168.234.132"
 CISCO_PORT="30013"
 expect <<EOF > /dev/null 2>&1
 spawn telnet $CISCO_IP $CISCO_PORT
-set timeout 10
+set timeout 20
+
 expect ">" { send "enable\r" }
 expect "#" { send "configure terminal\r" }
-expect "(config)#" { send "interface FastEthernet0/1\r" }  # Ganti dengan nama interface yang benar
+expect "(config)#" { send "interface FastEthernet0/1\r" }
 expect "(config-if)#" { send "switchport mode access\r" }
 expect "(config-if)#" { send "switchport access vlan 10\r" }
 expect "(config-if)#" { send "no shutdown\r" }
 expect "(config-if)#" { send "exit\r" }
-expect "(config)#" { send "interface FastEthernet0/0\r" }  # Ganti dengan nama interface yang benar
+expect "(config)#" { send "interface FastEthernet0/0\r" }
 expect "(config-if)#" { send "switchport mode trunk\r" }
 expect "(config-if)#" { send "switchport trunk encapsulation dot1q\r" }
 expect "(config-if)#" { send "no shutdown\r" }
